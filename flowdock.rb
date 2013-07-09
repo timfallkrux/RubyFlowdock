@@ -4,7 +4,6 @@ require "rubygems"
 require "flowdock"
 require "json"
 require "eventmachine"
-require "em-http"
 
 include "FlowdockAuth"
 
