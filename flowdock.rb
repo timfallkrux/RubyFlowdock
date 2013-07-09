@@ -1,8 +1,10 @@
 #!/usr/bin/env ruby
 
+require "rubygems"
 require "flowdock"
 require "json"
 require "eventmachine"
+require "em-http"
 
 include "FlowdockAuth"
 
@@ -26,7 +28,7 @@ EventMachine.run do
     buffer = ''
     flowstream.stream do |chunk|
         buffer << chunk
-        while line buffer.slice (/.+\r\n/)
+        while line buffer.slice(/.+\r\n/)
             puts JSON.parse(line).inspect
         end
     end
