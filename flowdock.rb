@@ -5,7 +5,7 @@ require "flowdock"
 require "json"
 require "eventmachine"
 
-include "FlowdockAuth"
+#include "FlowdockAuth"
 
 $company ="krux"
 tokens
