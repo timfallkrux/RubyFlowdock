@@ -4,14 +4,15 @@ require "rubygems"
 require "flowdock"
 require "json"
 require "eventmachine"
+require 'em-http-request'
 
 #include "FlowdockAuth"
 
 $company ="krux"
-tokens
-flows
+#tokens
+#flows
 
-token = 'e07b8f405e6194bdc3a8abb4d1db741d'
+token = 'a5ee341e5249df691399fa04be374f4f'
 flow = 'testing'
 
 #Authenticate our user and retrieve a list of flows
@@ -21,14 +22,20 @@ flow = 'testing'
 
 
 
-http = EM::HTTP.get("https://stream.flowdock.com/flows/#{company}/#{flow}")
+http = EM::HttpRequest.new("https://stream.flowdock.com/flows/#{$company}/#{flow}")
+parsedinput = {}
 EventMachine.run do
     flowstream = http.get(:head => {'Authorization' => [token, ''], 'accept' => 'application/json'}, :keepalive => true, :connect_timeout => 0, :inactivity_timeout => 0)
     buffer = ''
     flowstream.stream do |chunk|
         buffer << chunk
-        while line buffer.slice(/.+\r\n/)
-            puts JSON.parse(line).inspect
+        while line = buffer.slice(/.+\r\n/)
+        if line != "" then puts line end
+            #parsedinput = JSON.parse(line)
+            #puts parsedinput
+            # if parsedinput["app"] = "chat" and parsedinput["event"] = "message"
+            #     puts parsedinput#["content"]
+            # end
         end
     end
 end
