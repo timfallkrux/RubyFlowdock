@@ -23,19 +23,16 @@ flow = 'testing'
 
 
 http = EM::HttpRequest.new("https://stream.flowdock.com/flows/#{$company}/#{flow}")
-parsedinput = {}
 EventMachine.run do
     flowstream = http.get(:head => {'Authorization' => [token, ''], 'accept' => 'application/json'}, :keepalive => true, :connect_timeout => 0, :inactivity_timeout => 0)
     buffer = ''
     flowstream.stream do |chunk|
         buffer << chunk
-        while line = buffer.slice(/.+\r\n/)
-        if line != "" then puts line end
-            #parsedinput = JSON.parse(line)
-            #puts parsedinput
-            # if parsedinput["app"] = "chat" and parsedinput["event"] = "message"
-            #     puts parsedinput#["content"]
-            # end
+        while line = buffer.slice!(/.+\r\n/)
+            parsedinput = JSON.parse(line)
+            if parsedinput["event"] == "message"
+                puts "User #{parsedinput["user"]} said #{parsedinput["content"]}"
+            end
         end
     end
 end
